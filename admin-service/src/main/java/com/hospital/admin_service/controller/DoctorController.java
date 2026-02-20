@@ -1,11 +1,14 @@
-package com.hospital.admin_service;
+package com.hospital.admin_service.controller;
 
+import com.hospital.admin_service.entity.Doctor;
+import com.hospital.admin_service.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/doctors")
+@RequestMapping("/doctors")
 public class DoctorController {
 
     @Autowired
@@ -17,7 +20,7 @@ public class DoctorController {
     }
 
     @PostMapping
-    public Doctor createDoctor(@RequestBody Doctor doctor) {
+    public Doctor addDoctor(@RequestBody Doctor doctor) {
         return doctorRepository.save(doctor);
     }
 }

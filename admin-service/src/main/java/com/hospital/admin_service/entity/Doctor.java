@@ -1,4 +1,4 @@
-package com.hospital.admin_service;
+package com.hospital.admin_service.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,16 +9,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Doctor {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
     private String specialization;
-
-    private String consultationFee;
 }

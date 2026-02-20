@@ -3,6 +3,7 @@ package com.hospital.patient_service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.List;
 
@@ -13,20 +14,30 @@ public class PatientController {
     @Autowired
     private PatientRepository patientRepository;
 
-    // 1. Create a Patient (POST)
+    // The Kafka messenger
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    // 1. Create a Patient (POST) with Kafka Notification
     @PostMapping
     public Patient createPatient(@RequestBody Patient patient) {
-        return patientRepository.save(patient);
+        // First, save the patient to the database
+        Patient savedPatient = patientRepository.save(patient);
+
+        // Second, send a message to Kafka
+        // Topic name: "patient-notifications"
+        kafkaTemplate.send("patient-notifications", "New Patient Registered: " + savedPatient.getName());
+
+        return savedPatient;
     }
 
-    // 2. Get All Patients (GET)
+    // ... (Keep the rest of your methods: GET, findById, DELETE)
+
     @GetMapping
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
     }
 
-    // 3. Find Patient by ID (GET)
-    // URL Example: http://localhost:8080/api/patients/1
     @GetMapping("/{id}")
     public ResponseEntity<Patient> getPatientById(@PathVariable Long id) {
         return patientRepository.findById(id)
@@ -34,8 +45,6 @@ public class PatientController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 4. Delete Patient (DELETE)
-    // URL Example: http://localhost:8080/api/patients/1
     @DeleteMapping("/{id}")
     public String deletePatient(@PathVariable Long id) {
         if(!patientRepository.existsById(id)){

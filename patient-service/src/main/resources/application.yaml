@@ -1,13 +1,14 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: patient-service
-
   datasource:
-    url: jdbc:postgresql://localhost:5432/hospital_db
+    url: jdbc:postgresql://localhost:5432/patient_db
     username: user
     password: password
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,3 +16,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
